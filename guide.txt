@@ -1,0 +1,1834 @@
+# Reinforcement Forge
+
+## LLM Game Development Guide
+
+## 1. High-Level Concept
+
+Build a game about constructing a human brain through nested neural networks.
+
+The player does not directly control a person. Instead, the player creates, mutates, reinforces, prunes, and connects neural structures that eventually produce human behavior.
+
+The player begins with almost no understanding of what any signal means.
+
+They are effectively performing blind evolution.
+
+The player sees:
+
+* neural nodes
+* electrical pulses
+* nested subnetworks
+* experimental mutations
+* fitness changes
+* vague behavioral consequences
+* partial discoveries
+* unstable patterns
+* historical trial data
+
+The player does not initially see a clear human character, language system, visual system, or explicit set of objectives.
+
+Instead, the player slowly discovers that different networks correspond to capabilities such as:
+
+* vision
+* hearing
+* movement
+* pain avoidance
+* hunger
+* language
+* memory
+* social awareness
+* planning
+* emotional regulation
+* tool use
+* self-preservation
+* abstract reasoning
+
+The final goal is to create a viable human brain with a total fitness score of 100%.
+
+To achieve this, the player must create approximately 15 major neural nodes. Each major node is itself an editable neural network.
+
+This produces a hierarchy:
+
+```text
+Whole Brain Network
+    ├── Vision Network
+    │   ├── Edge Detection Network
+    │   ├── Motion Detection Network
+    │   ├── Object Recognition Network
+    │   └── Visual Memory Network
+    │
+    ├── Language Network
+    │   ├── Sound Segmentation Network
+    │   ├── Vocabulary Network
+    │   ├── Grammar Network
+    │   └── Speech Output Network
+    │
+    ├── Motor Network
+    │   ├── Balance Network
+    │   ├── Fine Motor Network
+    │   ├── Walking Network
+    │   └── Reflex Network
+    │
+    └── Additional brain systems
+```
+
+The entire game should feel like:
+
+* evolution without instructions
+* experimentation in darkness
+* discovering function through consequence
+* building complexity from noise
+* learning patterns without fully understanding them
+* creating intelligence from electrical structure
+
+The player should feel that they are not solving conventional puzzles.
+
+They are cultivating cognition.
+
+---
+
+# 2. Design Pillars
+
+## 2.1 Blind Discovery
+
+The player should not immediately know what a node does.
+
+Early node labels should be abstract.
+
+Examples:
+
+```text
+Signal Cluster A
+Input Stream 04
+Reward Echo
+Feedback Loop 12
+Unknown Response
+Latent Pattern
+Motor Channel B
+```
+
+Only after enough successful trials should the game reveal probable interpretations.
+
+Example:
+
+```text
+Signal Cluster A
+Probable Function: Visual Motion Detection
+Confidence: 63%
+```
+
+This creates the sensation of discovering biology rather than assembling known machinery.
+
+---
+
+## 2.2 Nested Neural Networks
+
+Every major node in the top-level brain is itself a network.
+
+The player should be able to:
+
+* zoom into a major brain region
+* inspect its internal nodes
+* modify its internal wiring
+* run local tests
+* return to the whole-brain view
+* observe how local changes affect global behavior
+
+A major node is not just a button or stat bonus.
+
+It is a self-contained simulation.
+
+---
+
+## 2.3 Reinforcement Through Experimentation
+
+The player primarily interacts through:
+
+* adding nodes
+* connecting nodes
+* disconnecting nodes
+* mutating weights
+* randomizing structures
+* reinforcing successful paths
+* weakening unsuccessful paths
+* pruning low-value connections
+* duplicating discovered motifs
+* locking valuable patterns
+* running trials
+
+The core emotional loop is:
+
+```text
+Experiment
+→ Run trial
+→ Observe score changes
+→ Notice a pattern
+→ Form a hypothesis
+→ Modify the network
+→ Run another trial
+→ Discover an unexpected consequence
+```
+
+---
+
+## 2.4 Fitness Is Multi-Dimensional
+
+Do not use only one transparent score internally.
+
+The displayed score may be one percentage, but the simulation should track many hidden dimensions.
+
+Example hidden fitness dimensions:
+
+```text
+survival
+energy_efficiency
+mobility
+injury_avoidance
+food_acquisition
+hydration
+temperature_regulation
+social_cooperation
+communication
+memory
+prediction
+tool_use
+emotional_stability
+reproduction
+adaptability
+self_awareness
+```
+
+Overall fitness is derived from these dimensions.
+
+The player should not immediately see every component.
+
+Some dimensions become visible only after discovery.
+
+---
+
+## 2.5 Emergence Over Scripted Answers
+
+There should rarely be one correct network.
+
+Players should be able to discover different viable structures.
+
+For example, survival may be achieved through:
+
+* aggression
+* avoidance
+* cooperation
+* concealment
+* planning
+* superior perception
+* efficient movement
+
+The simulation should reward multiple strategies.
+
+---
+
+# 3. Recommended Technical Stack
+
+Use one of the following:
+
+## Preferred
+
+* Godot 4.x
+* GDScript or C#
+* Forward+ renderer
+* custom shaders for bloom and electrical effects
+* graph editing with Control nodes
+* Resource files or JSON for simulation definitions
+
+## Alternative
+
+* Unity
+* C#
+* Universal Render Pipeline
+* Shader Graph
+* GraphView or custom UI graph editor
+
+Godot is recommended because the game is heavily UI-driven and procedural.
+
+---
+
+# 4. Project Structure
+
+Suggested structure:
+
+```text
+res://
+    autoload/
+        game_state.gd
+        simulation_manager.gd
+        save_manager.gd
+        discovery_manager.gd
+        event_bus.gd
+
+    data/
+        brain_regions/
+        node_types/
+        trial_definitions/
+        mutations/
+        discoveries/
+        progression/
+
+    scenes/
+        main_menu/
+        brain_editor/
+        subnetwork_editor/
+        trial_results/
+        discovery_screen/
+        tutorial/
+        settings/
+
+    scripts/
+        brain/
+            brain_graph.gd
+            neural_node.gd
+            neural_connection.gd
+            brain_region.gd
+            signal_packet.gd
+
+        simulation/
+            trial_runner.gd
+            agent_simulation.gd
+            environment_simulation.gd
+            fitness_calculator.gd
+            behavior_interpreter.gd
+
+        ui/
+            graph_node_view.gd
+            graph_connection_view.gd
+            inspector_panel.gd
+            fitness_panel.gd
+            history_chart.gd
+            pattern_library.gd
+
+        rendering/
+            electric_line_renderer.gd
+            pulse_renderer.gd
+            node_glow_controller.gd
+            graph_grid_renderer.gd
+
+    shaders/
+        electric_line.gdshader
+        neon_glow.gdshader
+        pulse_ring.gdshader
+        glitch.gdshader
+        scanline.gdshader
+
+    assets/
+        icons/
+        fonts/
+        audio/
+        sprites/
+```
+
+---
+
+# 5. Core Game Architecture
+
+## 5.1 Whole-Brain Graph
+
+The top-level brain contains approximately 15 major nodes.
+
+Suggested major systems:
+
+```text
+1. Vision
+2. Hearing
+3. Touch and Pain
+4. Motor Control
+5. Balance
+6. Hunger and Thirst
+7. Threat Detection
+8. Memory
+9. Language
+10. Emotion
+11. Social Cognition
+12. Planning
+13. Attention
+14. Reward and Motivation
+15. Self-Preservation
+```
+
+These should not all be named at the beginning.
+
+Early versions may appear as:
+
+```text
+Region 01
+Region 02
+Region 03
+Unknown Integrator
+Signal Hub
+Feedback Core
+```
+
+The player discovers their likely role through repeated experimentation.
+
+---
+
+## 5.2 Brain Region Data Model
+
+Each brain region should be both:
+
+* a node in the parent graph
+* a full internal graph
+
+Example data structure:
+
+```json
+{
+  "id": "region_vision",
+  "display_name": "Unknown Region 03",
+  "discovered_name": "Vision",
+  "discovery_confidence": 0.42,
+  "position": [520, 280],
+  "activation": 0.0,
+  "energy_cost": 4.8,
+  "stability": 0.72,
+  "plasticity": 0.61,
+  "subnetwork_id": "network_vision_001",
+  "input_ports": [
+    "sensory_stream_visual"
+  ],
+  "output_ports": [
+    "object_location",
+    "motion_alert",
+    "visual_memory"
+  ]
+}
+```
+
+---
+
+## 5.3 Neural Node Data Model
+
+```json
+{
+  "id": "node_045",
+  "network_id": "network_vision_001",
+  "type": "threshold",
+  "position": [420, 190],
+  "bias": 0.14,
+  "threshold": 0.67,
+  "decay": 0.11,
+  "noise": 0.09,
+  "plasticity": 0.42,
+  "activation": 0.0,
+  "energy_cost": 0.12,
+  "locked": false,
+  "metadata": {
+    "discovered_function": null,
+    "confidence": 0.0
+  }
+}
+```
+
+---
+
+## 5.4 Connection Data Model
+
+```json
+{
+  "id": "connection_121",
+  "source_node_id": "node_045",
+  "target_node_id": "node_052",
+  "weight": 0.83,
+  "connection_type": "excitatory",
+  "delay": 0.04,
+  "noise": 0.03,
+  "plasticity": 0.58,
+  "reinforcement_history": 14,
+  "locked": false
+}
+```
+
+Connection types:
+
+```text
+excitatory
+inhibitory
+modulatory
+reward
+memory
+unstable
+noisy
+delayed
+```
+
+---
+
+# 6. Neural Simulation Model
+
+Do not attempt to build a scientifically exact brain simulator.
+
+Use a readable symbolic neural system inspired by neural behavior.
+
+Each simulation tick:
+
+```text
+1. Collect external input signals
+2. Apply input signals to input nodes
+3. Propagate node activations
+4. Apply weights
+5. Apply delays
+6. Apply inhibition
+7. Apply noise
+8. Apply decay
+9. Activate outputs
+10. Translate outputs into behavior
+11. Evaluate consequences
+12. Apply reward or punishment signals
+13. Update plastic connections
+```
+
+Simple node activation formula:
+
+```text
+input_sum =
+    sum(incoming_activation * connection_weight)
+    + bias
+    + noise
+
+if input_sum >= threshold:
+    activation = activation_function(input_sum)
+else:
+    activation = 0
+
+activation *= 1 - decay
+```
+
+Possible activation functions:
+
+```text
+step
+sigmoid
+tanh
+linear
+pulse
+oscillator
+accumulator
+```
+
+---
+
+# 7. Nested Network Simulation
+
+Every brain region should expose a small set of aggregate inputs and outputs to its parent graph.
+
+Example:
+
+```text
+Vision Subnetwork Inputs:
+- visual_luminance
+- movement_left
+- movement_right
+- shape_complexity
+
+Vision Subnetwork Outputs:
+- likely_obstacle
+- likely_food
+- motion_direction
+- visual_confidence
+```
+
+The parent graph does not need to simulate every internal connection every frame.
+
+Use level-of-detail simulation.
+
+## When a network is open
+
+Run full internal simulation.
+
+## When a network is closed
+
+Use a compiled approximation.
+
+For example:
+
+```text
+compiled output =
+    cached response model
+    + current aggregate inputs
+    + region stability
+    + recent mutation modifiers
+```
+
+This prevents performance problems.
+
+---
+
+# 8. Network Compilation
+
+After the player exits a subnetwork, compile it into a simplified behavior model.
+
+Possible approach:
+
+```text
+1. Run the subnetwork against a set of test inputs.
+2. Record outputs.
+3. Generate a response table or fitted approximation.
+4. Store efficiency, stability, latency, and confidence.
+5. Use that compiled profile in the parent network.
+```
+
+Example compiled profile:
+
+```json
+{
+  "network_id": "network_vision_001",
+  "input_dimensions": 4,
+  "output_dimensions": 4,
+  "latency": 0.14,
+  "energy_cost": 7.4,
+  "stability": 0.82,
+  "response_samples": [
+    {
+      "input": [0.8, 0.2, 0.9, 0.4],
+      "output": [0.7, 0.1, 0.8, 0.6]
+    }
+  ]
+}
+```
+
+---
+
+# 9. Trial System
+
+The player runs trials instead of directly seeing every human action.
+
+Each trial represents a compressed life scenario.
+
+Examples:
+
+```text
+Find warmth
+Avoid injury
+Recognize food
+Escape a predator
+Walk across uneven terrain
+Remember a location
+Interpret a voice
+Respond to social rejection
+Use a simple tool
+Protect a child
+Communicate danger
+Plan through winter
+```
+
+Early trials should be unnamed.
+
+Example:
+
+```text
+Trial 0041
+Environmental stress detected
+Result: Fitness +0.8%
+```
+
+Later, the player may discover:
+
+```text
+Probable Scenario:
+Avoiding a falling object
+Confidence: 74%
+```
+
+---
+
+# 10. Hidden Human Simulation
+
+The player does not need to see a fully animated human during normal gameplay.
+
+The game may simulate a hidden abstract human agent.
+
+Use symbolic state variables:
+
+```text
+health
+energy
+body_temperature
+hunger
+thirst
+fear
+pain
+injury
+position
+balance
+memory_state
+social_bond
+language_comprehension
+goal_progress
+```
+
+The brain produces outputs such as:
+
+```text
+move_left
+move_right
+reach
+grasp
+speak
+avoid
+eat
+rest
+remember
+focus
+attack
+cooperate
+signal_distress
+```
+
+The hidden simulation converts these into trial outcomes.
+
+---
+
+# 11. Fitness Calculation
+
+Overall fitness should be difficult to fully optimize.
+
+Suggested formula:
+
+```text
+overall_fitness =
+    geometric_mean(
+        survival,
+        perception,
+        mobility,
+        regulation,
+        memory,
+        communication,
+        social_function,
+        planning,
+        adaptability
+    )
+    * stability_modifier
+    * efficiency_modifier
+```
+
+Use a geometric mean rather than a simple average.
+
+This prevents the player from ignoring critical systems.
+
+A brain with:
+
+```text
+100% language
+100% vision
+0% self-preservation
+```
+
+should fail catastrophically.
+
+Example:
+
+```python
+fitness = pow(
+    survival *
+    perception *
+    mobility *
+    regulation *
+    memory *
+    communication *
+    social *
+    planning *
+    adaptability,
+    1.0 / 9.0
+)
+```
+
+Then apply:
+
+```text
+fitness *= stability
+fitness *= efficiency_modifier
+fitness *= developmental_integrity
+```
+
+---
+
+# 12. Fitness Presentation
+
+Do not reveal exact details immediately.
+
+Early UI:
+
+```text
+Fitness: 3.7%
+Change: +0.2%
+Stability: Unknown
+Efficiency: Unknown
+```
+
+Later UI:
+
+```text
+Fitness: 61.4%
+
+Known contributors:
+- Threat response: 72%
+- Mobility: 65%
+- Energy regulation: 58%
+
+Unidentified contributors:
+- 6 hidden systems
+```
+
+This preserves mystery.
+
+---
+
+# 13. Discovery System
+
+The game should track the player’s scientific understanding separately from actual brain performance.
+
+A brain region can function well even if the player does not understand it.
+
+Each function has a discovery confidence score.
+
+Example:
+
+```json
+{
+  "concept_id": "visual_motion_detection",
+  "confidence": 0.68,
+  "evidence_count": 14,
+  "unlocked_name": true,
+  "unlocked_description": false,
+  "related_nodes": [
+    "node_102",
+    "node_108",
+    "node_114"
+  ]
+}
+```
+
+Discovery confidence increases when:
+
+* the player repeats similar experiments
+* a node activates consistently during a trial type
+* removing a node causes a consistent failure
+* reinforcing a path improves a consistent fitness component
+* a motif appears across multiple successful networks
+
+---
+
+# 14. Heuristic Discovery
+
+The game should generate useful but incomplete observations.
+
+Examples:
+
+```text
+Shorter signal paths appear to reduce energy consumption.
+
+A repeating inhibitory loop may improve stability.
+
+This cluster frequently activates before successful movement.
+
+Reward signals passing through Region 08 appear unusually effective.
+
+High activation in Region 11 correlates with social survival.
+
+Excessive feedback in this structure causes seizure-like instability.
+```
+
+Heuristics should not always be perfectly accurate.
+
+Each heuristic can have:
+
+```text
+confidence
+sample size
+applicable networks
+possible exceptions
+```
+
+---
+
+# 15. Mutation System
+
+Mutations are the primary method of blind exploration.
+
+Mutation types:
+
+```text
+add_node
+remove_node
+duplicate_node
+change_node_type
+add_connection
+remove_connection
+invert_connection
+change_weight
+change_threshold
+change_delay
+change_decay
+split_path
+merge_paths
+duplicate_motif
+rewire_cluster
+increase_noise
+reduce_noise
+```
+
+A mutation should create a preview.
+
+Example:
+
+```text
+Mutation Preview
+
+3 nodes affected
+5 connections changed
+Estimated stability impact: Unknown
+Estimated energy impact: +4% to +12%
+```
+
+Early in the game, estimates should be poor.
+
+As scientific understanding improves, estimates become more reliable.
+
+---
+
+# 16. Reinforcement System
+
+After a trial, successful signal paths can be reinforced.
+
+Possible reinforcement modes:
+
+```text
+Global Reinforcement
+Reinforce all recently active paths
+
+Selective Reinforcement
+Reinforce paths associated with a chosen outcome
+
+Local Reinforcement
+Reinforce paths inside the currently open subnetwork
+
+Decay Unused Paths
+Gradually weaken inactive connections
+```
+
+Use a simplified plasticity rule:
+
+```text
+if source_active and target_active and reward_positive:
+    weight += learning_rate * reward
+
+if source_active and target_inactive and reward_negative:
+    weight -= learning_rate * abs(reward)
+```
+
+Clamp weights:
+
+```text
+-2.0 to +2.0
+```
+
+---
+
+# 17. Pattern Memory
+
+The player should be able to save useful motifs.
+
+Examples:
+
+```text
+Feedback Stabilizer
+Threshold Gate
+Reward Relay
+Sparse Detector
+Signal Amplifier
+Oscillator
+Memory Loop
+Priority Inhibitor
+Noise Filter
+```
+
+Pattern data:
+
+```json
+{
+  "id": "motif_feedback_stabilizer",
+  "name": "Unknown Pattern 07",
+  "discovered_name": "Feedback Stabilizer",
+  "nodes": [],
+  "connections": [],
+  "known_effects": {
+    "stability": 0.09
+  },
+  "confidence": 0.78
+}
+```
+
+The player can insert saved motifs into subnetworks.
+
+---
+
+# 18. Procedural Rendering Requirements
+
+Most visuals should be procedural.
+
+Do not rely heavily on sprites for:
+
+* connections
+* electric arcs
+* pulses
+* selection circles
+* node halos
+* grid backgrounds
+* graphs
+* charts
+* bloom
+* signal travel
+* line noise
+* scanning effects
+* hover glows
+* connection thickness
+* activation indicators
+* animated borders
+
+Use sprites mainly for:
+
+* small icons
+* complex logos
+* unique badges
+* detailed menu illustrations
+* rare decorative elements
+
+---
+
+# 19. Procedural Connection Rendering
+
+Connections should be drawn as Bezier curves.
+
+Each connection should have:
+
+```text
+start position
+end position
+start tangent
+end tangent
+thickness
+base color
+glow color
+signal speed
+noise amount
+pulse frequency
+```
+
+Curve formula:
+
+```text
+P(t) =
+    (1-t)^3 P0
+    + 3(1-t)^2t P1
+    + 3(1-t)t^2 P2
+    + t^3 P3
+```
+
+Render in layers:
+
+```text
+1. Wide transparent glow line
+2. Narrow colored core line
+3. White-hot active center
+4. Traveling pulse sprites or procedural circles
+5. Optional electrical noise overlay
+```
+
+---
+
+# 20. Electric Arc Effect
+
+Generate arcs procedurally.
+
+Algorithm:
+
+```text
+1. Sample points along the Bezier connection.
+2. Add perpendicular random displacement.
+3. Smooth the points slightly.
+4. Recalculate every few frames.
+5. Increase jitter when unstable.
+6. Add brief branch arcs during activation spikes.
+```
+
+Parameters:
+
+```text
+jitter_strength
+jitter_frequency
+branch_probability
+branch_length
+pulse_intensity
+stability
+```
+
+Stable connections:
+
+* smooth
+* consistent
+* low flicker
+
+Unstable connections:
+
+* jagged
+* flickering
+* branching
+* occasionally breaking
+
+---
+
+# 21. Node Rendering
+
+Nodes should be composed procedurally from:
+
+```text
+outer glow
+outer frame
+inner ring
+core shape
+type icon
+activation meter
+port indicators
+selection ring
+pulse ring
+status markers
+```
+
+Node states:
+
+```text
+idle
+hovered
+selected
+active
+reinforced
+mutating
+unstable
+damaged
+locked
+disabled
+```
+
+Each node should react visually to activation.
+
+Example:
+
+```text
+low activation:
+dim glow
+
+medium activation:
+inner ring brightens
+
+high activation:
+core pulses
+
+overload:
+rapid flicker and electrical discharge
+```
+
+---
+
+# 22. Bloom and Neon
+
+Use HDR colors and bloom.
+
+Recommended rendering process:
+
+```text
+1. Draw dark UI base.
+2. Draw saturated emissive colors.
+3. Apply glow or bloom post-processing.
+4. Add subtle scanlines.
+5. Add low-opacity noise.
+6. Add vignette.
+```
+
+Avoid making all UI equally bright.
+
+Brightness hierarchy:
+
+```text
+Inactive structure: low brightness
+Selected structure: medium brightness
+Active signals: high brightness
+Reward events: very high brightness
+Critical overload: flashing brightness
+```
+
+---
+
+# 23. Main Screens
+
+## Main Menu
+
+Options:
+
+```text
+Continue Evolution
+New Brain
+Load Experiment
+Research Archive
+Settings
+Exit
+```
+
+---
+
+## Whole Brain Editor
+
+Shows:
+
+* 15 major regions
+* connections between regions
+* global fitness
+* trial controls
+* global stability
+* global energy use
+* discovery status
+
+Player can zoom into any region.
+
+---
+
+## Subnetwork Editor
+
+Shows:
+
+* internal neural nodes
+* internal connections
+* local trial tools
+* local fitness contribution
+* local stability
+* local energy cost
+* mutation tools
+* pattern insertion
+
+---
+
+## Trial Results
+
+Show:
+
+```text
+Fitness change
+Stability change
+Energy change
+Unknown behavioral consequence
+Activated regions
+Dominant pathways
+New discoveries
+Possible heuristics
+```
+
+---
+
+## Research Archive
+
+Contains:
+
+```text
+Discovered brain functions
+Known node types
+Known patterns
+Trial history
+Mutation history
+Failed experiments
+Successful lineages
+Scientific confidence levels
+```
+
+---
+
+# 24. Progression
+
+## Phase 1: Reflex
+
+The player only controls tiny networks.
+
+Capabilities:
+
+```text
+pain avoidance
+basic movement
+energy conservation
+simple reward response
+```
+
+---
+
+## Phase 2: Perception
+
+Unlock:
+
+```text
+vision
+hearing
+touch
+motion detection
+object distinction
+```
+
+---
+
+## Phase 3: Memory
+
+Unlock:
+
+```text
+short-term memory
+association
+habit formation
+location memory
+pattern recognition
+```
+
+---
+
+## Phase 4: Social Intelligence
+
+Unlock:
+
+```text
+voice recognition
+emotion recognition
+cooperation
+trust
+deception detection
+attachment
+```
+
+---
+
+## Phase 5: Language
+
+Unlock:
+
+```text
+sound segmentation
+word association
+grammar
+speech planning
+symbolic memory
+```
+
+---
+
+## Phase 6: Human Cognition
+
+Unlock:
+
+```text
+long-term planning
+tool use
+abstraction
+self-model
+moral reasoning
+culture
+creative behavior
+```
+
+---
+
+# 25. Failure States
+
+The player should not simply lose when one trial fails.
+
+Failure should create consequences.
+
+Examples:
+
+```text
+Brain instability
+Energy collapse
+Sensory overload
+Catastrophic feedback loop
+Motor paralysis
+Memory corruption
+Compulsive behavior
+Reward addiction
+Failure to recognize danger
+Social isolation
+Language without comprehension
+Pain without avoidance
+Planning without motivation
+```
+
+Some brains should become strange but viable.
+
+That is important.
+
+The game should allow imperfect forms of intelligence.
+
+---
+
+# 26. Evolutionary Lineages
+
+Allow the player to preserve multiple brain versions.
+
+Each saved lineage contains:
+
+```text
+brain graph
+subnetworks
+fitness profile
+mutation history
+discovered traits
+known weaknesses
+generation count
+```
+
+The player can branch a lineage.
+
+Example:
+
+```text
+Generation 84
+    ├── Cooperative lineage
+    ├── Aggressive lineage
+    └── High-efficiency lineage
+```
+
+This reinforces the evolutionary theme.
+
+---
+
+# 27. Randomness and Seeds
+
+Every new brain should use a seed.
+
+The seed affects:
+
+```text
+initial node layout
+hidden environmental pressures
+signal meanings
+trial order
+mutation tendencies
+latent capabilities
+rare discoveries
+```
+
+Use deterministic random generation.
+
+Players should be able to share seeds.
+
+---
+
+# 28. Audio Design
+
+Use procedural or layered audio.
+
+Each signal type should have a distinct sound.
+
+Examples:
+
+```text
+input activation:
+soft digital click
+
+reward:
+warm harmonic chime
+
+inhibition:
+muted low pulse
+
+unstable connection:
+electrical crackle
+
+memory activation:
+repeating echo
+
+mutation:
+rising distortion tone
+
+successful trial:
+subtle layered chord
+
+catastrophic failure:
+signal collapse and low-frequency drop
+```
+
+As the brain becomes more functional, the soundtrack may gradually become more musical and coherent.
+
+Early game:
+
+* noise
+* sparse pulses
+* dissonance
+
+Late game:
+
+* rhythm
+* harmony
+* recurring motifs
+* layered intelligence
+
+---
+
+# 29. MVP Scope
+
+The MVP should not attempt to simulate all 15 brain regions.
+
+Build the vertical slice around three nested regions.
+
+Suggested MVP regions:
+
+```text
+Perception
+Movement
+Reward
+```
+
+Each region contains:
+
+```text
+8 to 20 internal nodes
+10 to 40 connections
+```
+
+MVP features:
+
+```text
+whole-brain graph
+three nested subnetworks
+procedural nodes
+procedural connections
+electric signal animation
+mutation
+pruning
+reinforcement
+trial simulation
+fitness score
+trial history graph
+pattern saving
+discovery confidence
+save/load
+```
+
+MVP trial categories:
+
+```text
+approach reward
+avoid threat
+maintain energy
+navigate obstacle
+remember successful direction
+```
+
+---
+
+# 30. MVP Development Order
+
+## Milestone 1: Graph Editor
+
+Implement:
+
+```text
+place node
+move node
+select node
+connect nodes
+delete connection
+zoom
+pan
+save graph
+load graph
+```
+
+---
+
+## Milestone 2: Signal Simulation
+
+Implement:
+
+```text
+node activation
+weighted connections
+thresholds
+decay
+noise
+signal pulses
+output values
+```
+
+---
+
+## Milestone 3: Procedural Visuals
+
+Implement:
+
+```text
+Bezier links
+glowing nodes
+animated pulses
+electric jitter
+selection rings
+activation bloom
+```
+
+---
+
+## Milestone 4: Trial Runner
+
+Implement:
+
+```text
+input sequences
+output evaluation
+fitness scoring
+trial results
+history tracking
+```
+
+---
+
+## Milestone 5: Mutation and Reinforcement
+
+Implement:
+
+```text
+random mutation
+weight reinforcement
+pruning
+duplicate motif
+lock pattern
+```
+
+---
+
+## Milestone 6: Nested Networks
+
+Implement:
+
+```text
+top-level region node
+double-click to enter subnetwork
+subnetwork compilation
+aggregate inputs and outputs
+return to parent network
+```
+
+---
+
+## Milestone 7: Discovery
+
+Implement:
+
+```text
+hidden labels
+confidence values
+heuristic generation
+function reveal
+research archive
+```
+
+---
+
+# 31. Example Trial Definition
+
+```json
+{
+  "id": "trial_avoid_threat_01",
+  "hidden_name": "Unknown Trial 07",
+  "revealed_name": "Avoid Threat",
+  "duration": 20.0,
+  "input_channels": [
+    {
+      "channel": "signal_a",
+      "pattern": "rising_pulse",
+      "start_time": 2.0
+    },
+    {
+      "channel": "signal_b",
+      "pattern": "directional_left",
+      "start_time": 4.0
+    }
+  ],
+  "success_conditions": {
+    "avoidance_output": 0.7,
+    "reaction_time_max": 1.5,
+    "energy_cost_max": 12.0
+  },
+  "fitness_weights": {
+    "survival": 0.6,
+    "energy_efficiency": 0.2,
+    "reaction_time": 0.2
+  }
+}
+```
+
+---
+
+# 32. Example Mutation Function
+
+```python
+func mutate_network(network: BrainGraph, intensity: float) -> void:
+    var mutation_count = max(1, roundi(intensity * 10.0))
+
+    for i in mutation_count:
+        var mutation_type = weighted_random([
+            ["change_weight", 0.30],
+            ["add_connection", 0.20],
+            ["remove_connection", 0.12],
+            ["change_threshold", 0.12],
+            ["add_node", 0.08],
+            ["remove_node", 0.05],
+            ["duplicate_motif", 0.05],
+            ["invert_connection", 0.04],
+            ["change_delay", 0.04]
+        ])
+
+        apply_mutation(network, mutation_type)
+```
+
+---
+
+# 33. Example Signal Update
+
+```python
+func update_node(node: NeuralNode, delta: float) -> void:
+    var total_input := node.bias
+
+    for connection in node.incoming_connections:
+        var source_value = connection.get_delayed_source_activation()
+        total_input += source_value * connection.weight
+
+    total_input += randf_range(-node.noise, node.noise)
+
+    if total_input >= node.threshold:
+        node.activation = apply_activation_function(
+            node.activation_function,
+            total_input
+        )
+    else:
+        node.activation = 0.0
+
+    node.activation *= exp(-node.decay * delta)
+```
+
+---
+
+# 34. Example Fitness Result
+
+```json
+{
+  "trial_id": "trial_avoid_threat_01",
+  "overall_change": 0.013,
+  "hidden_metrics": {
+    "survival": 0.82,
+    "reaction_time": 0.61,
+    "energy_efficiency": 0.48
+  },
+  "visible_summary": {
+    "fitness_change": "+1.3%",
+    "stability_change": "-0.4%",
+    "energy_change": "+2.1%"
+  },
+  "discoveries": [
+    {
+      "text": "A fast signal path appears linked to successful avoidance.",
+      "confidence": 0.43
+    }
+  ]
+}
+```
+
+---
+
+# 35. Game Feel Requirements
+
+The interface should feel responsive and alive.
+
+Every action should have feedback.
+
+When the player connects nodes:
+
+* snap ports together
+* emit a brief spark
+* animate current through the new line
+* play a small electric sound
+
+When fitness rises:
+
+* graph pulses green
+* reward signal travels backward through active pathways
+* valuable paths glow briefly
+* successful motifs become visually distinct
+
+When fitness falls:
+
+* weak links dim
+* unstable regions flicker
+* negative reward pulses propagate
+* charts update immediately
+
+When a new function is discovered:
+
+* node label resolves from abstract text into a meaningful term
+* confidence meter animates
+* a subtle musical tone plays
+* related pathways highlight
+
+---
+
+# 36. Avoid These Design Mistakes
+
+Do not make the game a conventional circuit-building puzzle.
+
+Do not reveal all input and output meanings immediately.
+
+Do not make every trial have one intended answer.
+
+Do not make random mutation always worse.
+
+Do not make the top-level nodes simple passive stat bonuses.
+
+Do not simulate every internal node at full fidelity at all times.
+
+Do not use sprite animations for effects that can be rendered procedurally.
+
+Do not make fitness changes completely arbitrary.
+
+Do not let players reach 100% by maximizing only one system.
+
+Do not make the game visually static.
+
+---
+
+# 37. Final Player Experience
+
+The player should begin with:
+
+```text
+noise
+unknown signals
+random nodes
+poor fitness
+confusing consequences
+```
+
+They should gradually develop:
+
+```text
+reliable reflexes
+stable signal paths
+recognizable functional clusters
+nested brain regions
+memory
+language
+planning
+social intelligence
+```
+
+By the end, the player should look at a vast, interconnected brain made of nested networks and recognize that it evolved from blind experimentation.
+
+The final 100% fitness brain should not feel like a machine that was assembled from instructions.
+
+It should feel like something that was discovered, selected, reinforced, and grown.
