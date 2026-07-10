@@ -43,6 +43,16 @@ musical and coherent as your brain's fitness rises.
 | Procedural graph canvas (bezier glow, pulses, jitter) | `Source/BrainForge/UI/SGraphCanvas.*` |
 | JSON lineage saves with branching | `Source/BrainForge/Core/SaveSystem.*` |
 
+## Learning the game
+
+- **HOW TO PLAY** (main menu, or the `?` button in-game) - a 7-page manual
+  covering the goal, the screen, trials/fitness, the seven tools, subnetworks,
+  discovery/patterns, and generations/phases/winning.
+- **FIRST STEPS** - a guided objective tracker on new brains (watch trials,
+  mutate, wire, enter a region, prune, reward-pulse, reach Generation 2).
+  Each completed step pays +40 energy.
+- Ambient tutorial hints drip in during the first generation (toggle in Settings).
+
 ## Controls
 
 | Input | Action |

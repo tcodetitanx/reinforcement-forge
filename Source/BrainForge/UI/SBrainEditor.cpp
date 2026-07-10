@@ -255,6 +255,20 @@ TSharedRef<SWidget> SBrainEditor::BuildTopBar()
 
 		+ SHorizontalBox::Slot().AutoWidth().Padding(16, 0, 0, 0).VAlign(VAlign_Center)
 		[
+			SNew(SBox).WidthOverride(44)
+			[
+				SNew(SNeonButton)
+				.Text(LOCTEXT("Help", "?"))
+				.FontSize(12)
+				.Color(FForgeStyle::Blue())
+				.OnClicked(FSimpleDelegate::CreateLambda([this]()
+				{
+					OnNavigate.ExecuteIfBound((int32)EForgeScreen::HowToPlay);
+				}))
+			]
+		]
+		+ SHorizontalBox::Slot().AutoWidth().Padding(6, 0, 0, 0).VAlign(VAlign_Center)
+		[
 			SNew(SBox).WidthOverride(88)
 			[
 				SNew(SNeonButton)
@@ -428,6 +442,63 @@ TSharedRef<SWidget> SBrainEditor::BuildLeftPanel()
 				}
 			}, ForgeCost::LockPattern) ]
 		)
+	]
+
+	+ SVerticalBox::Slot().AutoHeight().Padding(0, 8, 0, 0)
+	[
+		SNew(SBox)
+		.Visibility(TAttribute<EVisibility>::CreateLambda([this]()
+		{
+			return Session->TutorialDone() ? EVisibility::Collapsed : EVisibility::Visible;
+		}))
+		[
+			ForgeUI::Panel(LOCTEXT("FirstSteps", "FIRST STEPS"),
+				SNew(SVerticalBox)
+				+ SVerticalBox::Slot().AutoHeight()
+				[
+					SNew(STextBlock)
+					.Text(TAttribute<FText>::CreateLambda([this]()
+					{
+						return FText::FromString(FString::Printf(TEXT("Step %d of %d"),
+							FMath::Min(Session->TutorialStage + 1, FForgeSession::NumTutorialSteps), FForgeSession::NumTutorialSteps));
+					}))
+					.Font(Style.Font(8, true))
+					.ColorAndOpacity(FSlateColor(FForgeStyle::TextDim()))
+				]
+				+ SVerticalBox::Slot().AutoHeight().Padding(0, 3, 0, 0)
+				[
+					SNew(STextBlock)
+					.Text(TAttribute<FText>::CreateLambda([this]()
+					{
+						return FText::FromString(Session->TutorialObjective());
+					}))
+					.Font(Style.Font(10))
+					.AutoWrapText(true)
+					.ColorAndOpacity(FSlateColor(FForgeStyle::Gold()))
+				]
+				+ SVerticalBox::Slot().AutoHeight().Padding(0, 3, 0, 0)
+				[
+					SNew(STextBlock)
+					.Text(TAttribute<FText>::CreateLambda([this]()
+					{
+						return FText::FromString(Session->TutorialProgress());
+					}))
+					.Font(Style.Font(9))
+					.Visibility(TAttribute<EVisibility>::CreateLambda([this]()
+					{
+						return Session->TutorialProgress().IsEmpty() ? EVisibility::Collapsed : EVisibility::Visible;
+					}))
+					.ColorAndOpacity(FSlateColor(FForgeStyle::SoftGreen()))
+				]
+				+ SVerticalBox::Slot().AutoHeight().Padding(0, 4, 0, 0)
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("StepReward", "each step: +40 energy"))
+					.Font(Style.Font(8))
+					.ColorAndOpacity(FSlateColor(FForgeStyle::TextDim()))
+				],
+				FForgeStyle::Gold())
+		]
 	]
 
 	+ SVerticalBox::Slot().AutoHeight().Padding(0, 8, 0, 0)

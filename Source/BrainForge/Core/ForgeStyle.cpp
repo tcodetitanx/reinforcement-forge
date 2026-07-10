@@ -7,6 +7,9 @@
 #include "Modules/ModuleManager.h"
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Rendering/SlateRenderer.h"
+#include "Misc/CoreDelegates.h"
 
 FForgeStyle& FForgeStyle::Get()
 {
@@ -63,10 +66,51 @@ FSlateBrush FForgeStyle::BrushFromTexture(UTexture2D* Tex, const FVector2D& Size
 	return Brush;
 }
 
+void FForgeStyle::Shutdown()
+{
+	if (!bInitialized) { return; }
+
+	// tell Slate to drop its render proxies while the textures are still alive
+	if (FSlateApplication::IsInitialized())
+	{
+		if (FSlateRenderer* Renderer = FSlateApplication::Get().GetRenderer())
+		{
+			auto Release = [Renderer](FSlateBrush& Brush)
+			{
+				if (Brush.GetResourceObject())
+				{
+					Renderer->ReleaseDynamicResource(Brush);
+					Brush.SetResourceObject(nullptr);
+				}
+			};
+			Release(GlowBrush);
+			Release(DiscBrush);
+			Release(RingBrush);
+			Release(RingThickBrush);
+			Release(HexBrush);
+			Release(HexOutlineBrush);
+			for (int32 i = 0; i < 9; ++i) { Release(NodeIcon[i]); }
+			Release(BadgeLocked);
+			Release(BadgeUnstable);
+			Release(BadgeDamaged);
+			Release(Logo);
+		}
+	}
+
+	for (UTexture2D* Tex : OwnedTextures)
+	{
+		if (Tex) { Tex->RemoveFromRoot(); }
+	}
+	OwnedTextures.Empty();
+	bInitialized = false;
+}
+
 void FForgeStyle::Initialize()
 {
 	if (bInitialized) { return; }
 	bInitialized = true;
+
+	FCoreDelegates::OnPreExit.AddRaw(this, &FForgeStyle::Shutdown);
 
 	// ---- simple brushes
 	WhiteBrush = FSlateBrush();

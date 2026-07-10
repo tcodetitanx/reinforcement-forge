@@ -86,8 +86,75 @@ bool FForgeSession::Spend(float Cost)
 	return true;
 }
 
+namespace
+{
+	struct FTutorialStep
+	{
+		const TCHAR* Objective;
+		const TCHAR* DoneName;
+	};
+	const FTutorialStep GTutorialSteps[FForgeSession::NumTutorialSteps] =
+	{
+		{ TEXT("Watch the brain work: let 5 trials run. Notice which regions light up."), TEXT("Observation") },
+		{ TEXT("Press M to MUTATE. Most mutations fail - evolution is patient."),         TEXT("First mutation") },
+		{ TEXT("Wire a pathway: hold Ctrl and drag from one region to another."),         TEXT("First wiring") },
+		{ TEXT("Double-click a lit region to enter the neurons inside it."),              TEXT("Going deeper") },
+		{ TEXT("Press P to PRUNE dead pathways. A quiet brain is a cheap brain."),        TEXT("First pruning") },
+		{ TEXT("Press Q to send a REWARD PULSE - it strengthens active paths."),          TEXT("Reinforcement") },
+		{ TEXT("Reach Generation 2. Every 25 trials, the lineage adapts."),               TEXT("A new generation") },
+	};
+}
+
+FString FForgeSession::TutorialObjective() const
+{
+	if (TutorialDone()) { return FString(); }
+	return GTutorialSteps[TutorialStage].Objective;
+}
+
+FString FForgeSession::TutorialProgress() const
+{
+	switch (TutorialStage)
+	{
+	case 0: return FString::Printf(TEXT("%d / 5 trials"), FMath::Min(TrialCounter, 5));
+	case 6: return FString::Printf(TEXT("%d / %d trials this generation"), TrialsThisGeneration, TrialsPerGeneration);
+	default: return FString();
+	}
+}
+
+void FForgeSession::UpdateTutorial()
+{
+	if (TutorialDone()) { return; }
+
+	bool bComplete = false;
+	switch (TutorialStage)
+	{
+	case 0: bComplete = TrialCounter >= 5; break;
+	case 1: bComplete = Discovery.MutateActions >= 1; break;
+	case 2: bComplete = PlayerConnections >= 1; break;
+	case 3: bComplete = bHasEnteredRegion; break;
+	case 4: bComplete = Discovery.PruneActions >= 1; break;
+	case 5: bComplete = Discovery.ReinforceActions >= 1; break;
+	case 6: bComplete = Generation >= 2; break;
+	default: break;
+	}
+
+	if (bComplete)
+	{
+		Energy = FMath::Min(EnergyCap, Energy + 40.f);
+		PushEvent(EForgeSound::Discovery,
+			FString::Printf(TEXT("First steps - %s complete (+40 energy)"), GTutorialSteps[TutorialStage].DoneName), true);
+		TutorialStage++;
+		if (TutorialDone())
+		{
+			PushEvent(EForgeSound::RewardChime, TEXT("You know enough now. The rest is discovery."), true);
+		}
+	}
+}
+
 void FForgeSession::Update(float DeltaSeconds)
 {
+	UpdateTutorial();
+
 	// modal reward choice or victory screen halts the flow
 	if (PendingOffers.Num() > 0 || Speed == 0)
 	{
@@ -531,6 +598,7 @@ bool FForgeSession::ActionConnect(int32 SrcNodeId, int32 DstNodeId, EConnType Ty
 
 	if (Net->AddConnection(SrcNodeId, DstNodeId, Type, Rng.FRandRange(0.4f, 0.9f)))
 	{
+		PlayerConnections++;
 		PushEvent(EForgeSound::Connect);
 		return true;
 	}
@@ -677,6 +745,7 @@ bool FForgeSession::ActionConnectRegions(int32 SrcRegionId, int32 DstRegionId)
 
 	if (Brain.AddLink(SrcRegionId, DstRegionId, SrcCh, DstCh, Rng.FRandRange(0.5f, 0.9f)))
 	{
+		PlayerConnections++;
 		PushEvent(EForgeSound::Connect);
 		return true;
 	}
@@ -702,6 +771,7 @@ void FForgeSession::EnterRegion(int32 RegionId)
 	if (R && R->bAwake)
 	{
 		OpenRegionId = RegionId;
+		bHasEnteredRegion = true;
 		PushEvent(EForgeSound::MemoryEcho);
 	}
 }

@@ -93,6 +93,16 @@ public:
 	bool bFreeAwaken = false;
 	float PermStabilityBonus = 0.f;
 
+	// ---- first-steps guided tutorial (persisted)
+	int32 TutorialStage = 0;          // >= NumTutorialSteps means finished
+	int32 PlayerConnections = 0;      // connections the player wired by hand
+	bool bHasEnteredRegion = false;
+	static constexpr int32 NumTutorialSteps = 7;
+	bool TutorialDone() const { return TutorialStage >= NumTutorialSteps; }
+	FString TutorialObjective() const;   // current step instruction
+	FString TutorialProgress() const;    // "2 / 5" style progress for the step
+	void UpdateTutorial();
+
 	// ---- state flags
 	bool bWon = false;
 	bool bEverWon = false;

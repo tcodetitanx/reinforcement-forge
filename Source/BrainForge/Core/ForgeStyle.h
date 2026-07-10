@@ -18,6 +18,14 @@ struct BRAINFORGE_API FForgeStyle
 	void Initialize();
 	bool IsInitialized() const { return bInitialized; }
 
+	/**
+	 * Release Slate render proxies and unroot textures before UObject teardown.
+	 * Bound to FCoreDelegates::OnPreExit - without this the editor crashes on
+	 * shutdown when the exit purge destroys textures that live brushes still
+	 * reference.
+	 */
+	void Shutdown();
+
 	// ---------- palette (sampled from the target screenshot) ----------
 	static FLinearColor Background()      { return FLinearColor(0.012f, 0.022f, 0.045f); }
 	static FLinearColor PanelBg()         { return FLinearColor(0.020f, 0.042f, 0.075f, 0.94f); }

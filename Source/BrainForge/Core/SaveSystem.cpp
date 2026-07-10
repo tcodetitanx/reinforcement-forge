@@ -191,6 +191,9 @@ bool ForgeSave::SaveSession(const FForgeSession& S, const FString& FileName)
 	J->SetBoolField(TEXT("FreeAwaken"), S.bFreeAwaken);
 	J->SetNumberField(TEXT("PermStability"), S.PermStabilityBonus);
 	J->SetBoolField(TEXT("EverWon"), S.bEverWon);
+	J->SetNumberField(TEXT("TutorialStage"), S.TutorialStage);
+	J->SetNumberField(TEXT("PlayerConnections"), S.PlayerConnections);
+	J->SetBoolField(TEXT("EnteredRegion"), S.bHasEnteredRegion);
 	J->SetStringField(TEXT("SavedAt"), FDateTime::UtcNow().ToIso8601());
 
 	// fitness
@@ -337,6 +340,12 @@ bool ForgeSave::LoadSession(FForgeSession& S, const FString& FileName)
 	S.bFreeAwaken = J->GetBoolField(TEXT("FreeAwaken"));
 	S.PermStabilityBonus = J->GetNumberField(TEXT("PermStability"));
 	J->TryGetBoolField(TEXT("EverWon"), S.bEverWon);
+	{
+		double Tmp;
+		if (J->TryGetNumberField(TEXT("TutorialStage"), Tmp)) { S.TutorialStage = (int32)Tmp; }
+		if (J->TryGetNumberField(TEXT("PlayerConnections"), Tmp)) { S.PlayerConnections = (int32)Tmp; }
+	}
+	J->TryGetBoolField(TEXT("EnteredRegion"), S.bHasEnteredRegion);
 
 	const TArray<TSharedPtr<FJsonValue>>* Dims;
 	if (J->TryGetArrayField(TEXT("FitnessDims"), Dims))

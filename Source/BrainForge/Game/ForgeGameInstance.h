@@ -16,7 +16,8 @@ enum class EForgeScreen : uint8
 	BrainEditor,
 	ResearchArchive,
 	Settings,
-	Credits
+	Credits,
+	HowToPlay
 };
 
 UCLASS()

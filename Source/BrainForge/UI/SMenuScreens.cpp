@@ -102,6 +102,13 @@ void SMainMenu::Construct(const FArguments& InArgs, UForgeGameInstance* InGI)
 			OnNavigate.ExecuteIfBound((int32)EForgeScreen::NewBrain);
 		})
 	];
+	Buttons->AddSlot().AutoHeight()
+	[
+		MenuButton(LOCTEXT("HowToPlay", "HOW TO PLAY"), FForgeStyle::Blue(), [this]()
+		{
+			OnNavigate.ExecuteIfBound((int32)EForgeScreen::HowToPlay);
+		})
+	];
 	if (bHasSave)
 	{
 		Buttons->AddSlot().AutoHeight()
@@ -768,6 +775,224 @@ void SSettingsScreen::Construct(const FArguments& InArgs, UForgeGameInstance* In
 void SSettingsScreen::ApplyDisplay()
 {
 	GI->ApplyDisplaySettings();
+}
+
+// ============================================================== how to play
+
+namespace
+{
+	struct FManualSection
+	{
+		const TCHAR* Heading;
+		const TCHAR* Body;
+	};
+	struct FManualPage
+	{
+		const TCHAR* Title;
+		TArray<FManualSection> Sections;
+	};
+
+	TArray<FManualPage> BuildManual()
+	{
+		return
+		{
+			{ TEXT("WHAT YOU ARE DOING"),
+			{
+				{ TEXT("The goal"),
+				  TEXT("Grow a viable human brain - 100% viability. You never control the human. You breed the wiring that produces one.") },
+				{ TEXT("You start blind"),
+				  TEXT("Nobody tells you what \"Region 06\" does or what \"Unknown Trial 07\" tests. You learn by watching what lights up when things go well - exactly like real evolution, but faster and with better music.") },
+				{ TEXT("The vibe"),
+				  TEXT("This plays like Mini Motorways: trials stream by themselves, you calmly reshape the network, and every generation you pick one upgrade. There is no fail state - only brains that work strangely.") },
+			}},
+			{ TEXT("READING THE SCREEN"),
+			{
+				{ TEXT("The graph"),
+				  TEXT("Hexagons are brain regions. Bright ones are awake; dark dashed ones are dormant. Lines between them are pathways - pulses travel along them when signals flow. The brighter a region, the harder it is working.") },
+				{ TEXT("Top bar"),
+				  TEXT("FITNESS SCORE is your cumulative points (goes up forever). VIABILITY is the real goal - the hidden fitness of the brain, 0-100%. SIGNAL EFFICIENCY and STABILITY are health gauges: low stability leads to seizures.") },
+				{ TEXT("Right panels"),
+				  TEXT("Reward history (your viability over time), recent trial scores (green bars = good trials), the color legend, pattern memory, and details of whatever you selected.") },
+				{ TEXT("Bottom bar"),
+				  TEXT("Tools and the big gold RUN 100 TRIALS button. The ENERGY counter is your only currency.") },
+			}},
+			{ TEXT("TRIALS AND FITNESS"),
+			{
+				{ TEXT("Trials"),
+				  TEXT("A trial is a compressed life moment: find warmth, dodge a threat, remember a direction. The game feeds signals into sensory regions and reads what the motor regions do. You'll see the trial strip up top ticking away.") },
+				{ TEXT("Scoring"),
+				  TEXT("Each trial scores 0-100% and nudges hidden fitness dimensions (survival, mobility, memory...). Viability is a GEOMETRIC mean - a brain great at language but unable to avoid pain stays near zero. Balance wins.") },
+				{ TEXT("Energy"),
+				  TEXT("Every finished trial pays energy; good trials pay triple. Every action costs energy. If you're broke, just let it run for a while - calm is a strategy.") },
+				{ TEXT("Speed"),
+				  TEXT("1x / 2x / 4x / 8x and pause, top right (or keys 0-4). Space makes sure trials are flowing.") },
+			}},
+			{ TEXT("YOUR SEVEN TOOLS"),
+			{
+				{ TEXT("MUTATE (M) - 50e"),
+				  TEXT("Random rewiring. Most mutations do nothing or hurt; a few are gold. The preview is vague on purpose - it sharpens as your knowledge grows.") },
+				{ TEXT("PRUNE (P) - 15e"),
+				  TEXT("Deletes the weakest, least-used connections. Cheap, safe, and it raises stability and efficiency. When in doubt, prune.") },
+				{ TEXT("REWARD PULSE (Q) - 30e"),
+				  TEXT("Strengthens every pathway that was recently active. Fire it right after a good trial to lock in whatever just worked.") },
+				{ TEXT("RANDOMIZE (R) - 40e"),
+				  TEXT("Scrambles weights. A panic button for a stuck brain.") },
+				{ TEXT("CONNECT (C or Ctrl-drag) - 10e"),
+				  TEXT("Wire regions (or neurons) together. Signals can't use paths that don't exist - sensory regions need routes to motor regions.") },
+				{ TEXT("LOCK (L) - 20e"),
+				  TEXT("Protects selected structures from mutation. Lock the good stuff, then mutate fearlessly.") },
+				{ TEXT("RUN 100 TRIALS - 100e"),
+				  TEXT("Queues a hands-off batch. Set 8x, sip coffee, watch the line go up.") },
+			}},
+			{ TEXT("REGIONS AND SUBNETWORKS"),
+			{
+				{ TEXT("Enter a region"),
+				  TEXT("Double-click any awake region. Inside is its own network: green INPUT hexes (what the region hears), teal OUTPUT hexes (what it says to the rest of the brain), and neurons between them.") },
+				{ TEXT("Edit inside"),
+				  TEXT("Same tools work locally and hit harder. + ADD NODE grows neurons (the button cycles types: relay, threshold, memory, inhibitor, oscillator, reward). Select a connection to BOOST, DAMPEN, or CUT it. Esc returns to the whole brain.") },
+				{ TEXT("Awakening"),
+				  TEXT("Dormant regions can awaken (150e, double-click) once your phase allows. Each awake region adds capability - and energy drain. Don't wake everything at once.") },
+				{ TEXT("Auto-test (T)"),
+				  TEXT("Inside a region, runs a quick calibration and reports its stability and energy draw.") },
+			}},
+			{ TEXT("DISCOVERY AND PATTERNS"),
+			{
+				{ TEXT("Names emerge"),
+				  TEXT("When a region consistently carries scoring trials, its confidence grows: \"Region 06\" becomes \"Vision? 55%\" and eventually a confirmed function with a description. The Research Archive keeps everything you've learned.") },
+				{ TEXT("Heuristics"),
+				  TEXT("Sometimes the game hands you an observation (\"Loop suppression improves stability +9%\"). These aren't flavor - each discovered heuristic grants its bonus permanently.") },
+				{ TEXT("Pattern memory"),
+				  TEXT("Inside a region, select 2-6 neurons (Shift-click) and CAPTURE SELECTION. Stamp that motif into other regions later (35e). Use a pattern three times and the game names it.") },
+			}},
+			{ TEXT("GENERATIONS, PHASES, WINNING"),
+			{
+				{ TEXT("Generations"),
+				  TEXT("Every 25 trials the flow pauses and you pick ONE of three adaptations - more energy, a pattern slot, an insight probe, permanent stability, a plasticity surge, or a free awakening. This is your build. Lineages diverge here.") },
+				{ TEXT("Phases"),
+				  TEXT("Viability milestones unlock development: Reflex, then Perception (8%), Memory (20%), Social (35%), Language (50%), Cognition (65%). New phases bring new trial types and new regions to awaken.") },
+				{ TEXT("Trouble"),
+				  TEXT("Stability under 30% for too long causes a seizure - fitness is lost. Prune, dampen, or lock to calm a chaotic brain. Strange-but-viable is fine. Chaos is not.") },
+				{ TEXT("Winning"),
+				  TEXT("100% viability = a viable human brain. Your save is a lineage - BRANCH it from Load Experiment to explore different futures from the same past. Share your seed so friends face the same hidden world.") },
+			}},
+		};
+	}
+}
+
+void SHowToPlayScreen::Construct(const FArguments& InArgs, UForgeGameInstance* InGI)
+{
+	GI = InGI;
+	OnNavigate = InArgs._OnNavigate;
+	const FForgeStyle& Style = FForgeStyle::Get();
+
+	ChildSlot
+	[
+		ScreenFrame(
+			SNew(SVerticalBox)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 28, 0, 4)
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("HowToTitle", "HOW TO PLAY"))
+				.Font(Style.Font(20, true))
+				.ColorAndOpacity(FSlateColor(FForgeStyle::Gold()))
+			]
+			+ SVerticalBox::Slot().FillHeight(1.f).HAlign(HAlign_Center).Padding(0, 8)
+			[
+				SNew(SBox).WidthOverride(720)
+				[
+					SNew(SScrollBox)
+					+ SScrollBox::Slot()
+					[
+						SAssignNew(PageBox, SVerticalBox)
+					]
+				]
+			]
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 4, 0, 24)
+			[
+				SNew(SHorizontalBox)
+				+ SHorizontalBox::Slot().AutoWidth().Padding(4, 0)
+				[
+					SNew(SBox).WidthOverride(120)
+					[
+						SNew(SNeonButton).Text(LOCTEXT("PrevPage", "<  PREV")).FontSize(10).Color(FForgeStyle::Cyan())
+						.OnClicked(FSimpleDelegate::CreateLambda([this]() { ShowPage(PageIndex - 1); }))
+					]
+				]
+				+ SHorizontalBox::Slot().AutoWidth().Padding(10, 0).VAlign(VAlign_Center)
+				[
+					SNew(STextBlock)
+					.Text(TAttribute<FText>::CreateLambda([this]()
+					{
+						return FText::FromString(FString::Printf(TEXT("%d / 7"), PageIndex + 1));
+					}))
+					.Font(Style.Font(11, true))
+					.ColorAndOpacity(FSlateColor(FForgeStyle::TextBright()))
+				]
+				+ SHorizontalBox::Slot().AutoWidth().Padding(4, 0)
+				[
+					SNew(SBox).WidthOverride(120)
+					[
+						SNew(SNeonButton).Text(LOCTEXT("NextPage", "NEXT  >")).FontSize(10).Color(FForgeStyle::Cyan())
+						.OnClicked(FSimpleDelegate::CreateLambda([this]() { ShowPage(PageIndex + 1); }))
+					]
+				]
+				+ SHorizontalBox::Slot().AutoWidth().Padding(24, 0, 0, 0)
+				[
+					SNew(SBox).WidthOverride(160)
+					[
+						SNew(SNeonButton).Text(LOCTEXT("ManualDone", "GOT IT")).FontSize(10).Color(FForgeStyle::Gold())
+						.OnClicked(FSimpleDelegate::CreateLambda([this]()
+						{
+							OnNavigate.ExecuteIfBound((int32)(GI->HasSession() ? EForgeScreen::BrainEditor : EForgeScreen::MainMenu));
+						}))
+					]
+				]
+			]
+		)
+	];
+
+	ShowPage(0);
+}
+
+void SHowToPlayScreen::ShowPage(int32 Index)
+{
+	static const TArray<FManualPage> Manual = BuildManual();
+	PageIndex = FMath::Clamp(Index, 0, Manual.Num() - 1);
+	if (!PageBox.IsValid()) { return; }
+
+	const FForgeStyle& Style = FForgeStyle::Get();
+	const FManualPage& Page = Manual[PageIndex];
+	PageBox->ClearChildren();
+
+	TSharedRef<SVerticalBox> Sections = SNew(SVerticalBox);
+	for (const FManualSection& S : Page.Sections)
+	{
+		Sections->AddSlot().AutoHeight().Padding(0, 7)
+		[
+			SNew(SVerticalBox)
+			+ SVerticalBox::Slot().AutoHeight()
+			[
+				SNew(STextBlock)
+				.Text(FText::FromString(S.Heading))
+				.Font(Style.Font(11, true))
+				.ColorAndOpacity(FSlateColor(FForgeStyle::Cyan()))
+			]
+			+ SVerticalBox::Slot().AutoHeight().Padding(0, 2, 0, 0)
+			[
+				SNew(STextBlock)
+				.Text(FText::FromString(S.Body))
+				.Font(Style.Font(10))
+				.AutoWrapText(true)
+				.LineHeightPercentage(1.15f)
+				.ColorAndOpacity(FSlateColor(FForgeStyle::TextBright()))
+			]
+		];
+	}
+
+	PageBox->AddSlot().AutoHeight()
+	[
+		ForgeUI::Panel(FText::FromString(Page.Title), Sections, FForgeStyle::Gold())
+	];
 }
 
 // ============================================================== credits

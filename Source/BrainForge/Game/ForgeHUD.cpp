@@ -86,6 +86,9 @@ void AForgeHUD::RebuildScreen()
 	case EForgeScreen::Credits:
 		CurrentWidget = SNew(SCreditsScreen).OnNavigate(Nav);
 		break;
+	case EForgeScreen::HowToPlay:
+		CurrentWidget = SNew(SHowToPlayScreen, G).OnNavigate(Nav);
+		break;
 	default:
 		CurrentWidget = SNew(SMainMenu, G).OnNavigate(Nav);
 		break;

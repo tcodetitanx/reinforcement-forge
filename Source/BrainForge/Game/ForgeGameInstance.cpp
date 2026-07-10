@@ -23,6 +23,17 @@ void UForgeGameInstance::Init()
 	{
 		StartNewGame(AutoSeed != 0 ? AutoSeed : 123456, TEXT("Autostart"));
 	}
+
+	// smoke-test hook: open a specific screen (howtoplay, settings, credits...)
+	FString ScreenName;
+	if (FParse::Value(FCommandLine::Get(), TEXT("forgescreen="), ScreenName))
+	{
+		if (ScreenName == TEXT("howtoplay")) { Navigate(EForgeScreen::HowToPlay); }
+		else if (ScreenName == TEXT("settings")) { Navigate(EForgeScreen::Settings); }
+		else if (ScreenName == TEXT("credits")) { Navigate(EForgeScreen::Credits); }
+		else if (ScreenName == TEXT("newbrain")) { Navigate(EForgeScreen::NewBrain); }
+		else if (ScreenName == TEXT("load")) { Navigate(EForgeScreen::LoadExperiment); }
+	}
 }
 
 void UForgeGameInstance::Shutdown()

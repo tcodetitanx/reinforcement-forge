@@ -83,6 +83,23 @@ private:
 	void ApplyDisplay();
 };
 
+/** How to Play: multi-page illustrated manual. */
+class SHowToPlayScreen : public SCompoundWidget
+{
+public:
+	SLATE_BEGIN_ARGS(SHowToPlayScreen) {}
+		SLATE_EVENT(FOnForgeNavigate, OnNavigate)
+	SLATE_END_ARGS()
+	void Construct(const FArguments& InArgs, UForgeGameInstance* InGI);
+
+private:
+	UForgeGameInstance* GI = nullptr;
+	FOnForgeNavigate OnNavigate;
+	TSharedPtr<SVerticalBox> PageBox;
+	int32 PageIndex = 0;
+	void ShowPage(int32 Index);
+};
+
 /** Credits. */
 class SCreditsScreen : public SCompoundWidget
 {
